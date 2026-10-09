@@ -1,0 +1,66 @@
+name: ScreenKitty
+options:
+  bundleIdPrefix: com.domin
+  deploymentTarget:
+    iOS: "17.0"
+  createIntermediateGroups: true
+
+packages:
+  KittyKit:
+    path: Packages/KittyKit
+
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    TARGETED_DEVICE_FAMILY: "1"
+    CURRENT_PROJECT_VERSION: "1"
+
+targets:
+  ScreenKitty:
+    type: application
+    platform: iOS
+    sources:
+      - App/ScreenKitty
+      - Shared
+    dependencies:
+      - package: KittyKit
+      - target: ScreenKittyWidget
+    entitlements:
+      path: Support/ScreenKitty.entitlements
+    info:
+      path: App/ScreenKitty/Info.plist
+      properties:
+        CFBundleDisplayName: Screen Kitty
+        UILaunchScreen: {}
+        NSSupportsLiveActivities: true
+        NSUserNotificationsUsageDescription: Screen Kitty needs permission to nag you about your tasks.
+        BGTaskSchedulerPermittedIdentifiers:
+          - com.domin.screenkitty.refresh
+        UIBackgroundModes:
+          - fetch
+        ITSAppUsesNonExemptEncryption: false
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+
+  ScreenKittyWidget:
+    type: app-extension
+    platform: iOS
+    sources:
+      - Widget/ScreenKittyWidget
+      - Shared
+    dependencies:
+      - package: KittyKit
+    entitlements:
+      path: Support/ScreenKittyWidget.entitlements
+    info:
+      path: Widget/ScreenKittyWidget/Info.plist
+      properties:
+        CFBundleDisplayName: Screen Kitty Widget
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
+
+schemes:
+  ScreenKitty:
+    build:
+      targets:
+        ScreenKitty: all
